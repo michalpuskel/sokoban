@@ -3,9 +3,9 @@ import time
 from functools import reduce
 
 class Sokoban:
-    def __init__(self):
+    def __init__(self, mapFile):
         self.map = []
-        self.loadFile('mapa.txt')
+        self.loadFile(mapFile)
         self.playerX, self.playerY = self.scanPlayerPosition()
         print(self)
 
@@ -36,10 +36,15 @@ class Sokoban:
     def __repr__(self):
         return reduce(lambda acc, l: f'{acc}\n{l}', [f'{line}' for line in self.map])
 
+    def checkWinner(self):
+        return len(list(filter(lambda c: c == '.', reduce(lambda acc, row: acc + row, self.map)))) == 0
+
     def animate(self):
         while True:
             self.draw()
             self.canvas.update()
+            if self.checkWinner():
+                print('Winner!')
             time.sleep(0.05)
 
     def draw(self):
@@ -119,24 +124,27 @@ class Sokoban:
         self.map[fromY][fromX] = '_' if self.map[fromY][fromX] == '$' else '.'
         self.map[newY][newX] = '$' if self.map[newY][newX] == '_' else '!'
 
-    def moveUp(self, event):
+    def moveUp(self, _):
         self.sokoHeading = 'up'
         self.doMove()
 
-    def moveDown(self, event):
+    def moveDown(self, _):
         self.sokoHeading = 'down'
         self.doMove()
 
-    def moveLeft(self, event):
+    def moveLeft(self, _):
         self.sokoHeading = 'left'
         self.doMove()
 
-    def moveRight(self, event):
+    def moveRight(self, _):
         self.sokoHeading = 'right'
         self.doMove()
 
     def doMove(self):
         self.playerMove(self.sokoHeading)
+
+    def toggleMouseControl(self, _):
+        self.mouseControls = not self.mouseControls
 
     def bindControls(self):
         self.canvas.bind_all('<Up>', self.moveUp)
@@ -149,8 +157,10 @@ class Sokoban:
         self.canvas.bind_all('a', self.moveLeft)
         self.canvas.bind_all('d', self.moveRight)
 
+        self.canvas.bind_all('<space>', self.toggleMouseControl)
 
 
-trash = Sokoban()
+
+trash = Sokoban('mapa_easy.txt')
 
 tkinter.mainloop()
