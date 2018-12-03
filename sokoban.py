@@ -10,6 +10,7 @@ class Sokoban:
 
         self.square = 64
         self.sokoHeading = 'up'
+        self.keyboard = True
 
         self.canvas = tkinter.Canvas(bg='pale green', width=self.square * len(self.map[0]), height=self.square * len(self.map))
         self.canvas.pack()
@@ -57,9 +58,31 @@ class Sokoban:
 
                     self.garbage.append(img)
 
-    #todo refactor
-    def canMove(self, direction):
-        newX, newY = self.playerX, self.playerY
+    def playerMove(self, direction):
+        playerCanMove, newX, newY = self.objectCanMove(self.playerX, self.playerY, direction)
+
+        if not playerCanMove:
+            if self.canMove(newX, newY) and self.map[newY][newX] in '$!':
+                crateCanMove, crateFinalX, crateFinalY = self.objectCanMove(newX, newY, direction)
+                if crateCanMove:
+                    self.crateMove(newX, newY, crateFinalX, crateFinalY)
+                return crateCanMove
+
+            return False
+
+        self.playerX, self.playerY = newX, newY
+        return True
+
+    def objectCanMove(self, x, y, direction):
+        newX, newY = self.tryMove(x, y, direction)
+
+        if not self.canMove(newY, newY):
+            return False
+
+        return self.map[newY][newX] in '_.', newX, newY
+
+    def tryMove(self, x, y, direction):
+        newX, newY = x, y
 
         if direction == 'up':
             newY -= 1
@@ -70,30 +93,21 @@ class Sokoban:
         elif direction == 'right':
             newX += 1
 
-        if not (0 <= newX < len(self.map[0])):
-           return False
-        if not (0 <= newY < len(self.map)):
-           return False
+        return newX, newY
 
-        if self.map[newY][newX] == '#':
-            return False
-        elif self.map[newY][newX] in '$!':
-            return self.crateCanMove(newX, newY, direction)
+    def canMove(self, newX, newY):
+        return (0 <= newX < len(self.map[0])) and \
+               (0 <= newY < len(self.map))
 
-        return True
+    def crateMove(self, fromX, fromY, newX, newY):
+        if not self.map[fromY][fromX] in '$!':
+            raise Exception('moved something as crate error')
 
-    def crateCanMove(self, x, y, direction):
-        ...
+        if not self.map[newY][newX] in '_.':
+            raise Exception('moved crate to non free square error')
 
-    def move(self):
-        ...
-
-    def crateMove(self):
-        ...
-
-
-
-
+        self.map[fromY][fromX] = '_' if self.map[fromY][fromX] == '$' else '.'
+        self.map[newY][newX] = '$' if self.map[newY][newX] == '_' else '!'
 
 
 
