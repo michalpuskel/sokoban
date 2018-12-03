@@ -145,16 +145,20 @@ class Sokoban:
 
     def toggleMouseControl(self, _):
         self.mouseControls = not self.mouseControls
+        if self.mouseControls:
+            print('Mouse Control ON')
+        else:
+            print('Mouse Control OFF')
 
     def mouseMoveControl(self, event):
         if not self.mouseControls:
             return
 
-        self.sokoHeading = self.convertMouseCoordsToMove(event.x, event.y)
+        self.sokoHeading = self.convertMouseCoordsToMoveDirection(event.x, event.y)
         self.doMove()
 
     # TODO
-    def convertMouseCoordsToMove(self, mouseX, mouseY):
+    def convertMouseCoordsToMoveDirection(self, mouseX, mouseY):
         pass
 
         return 'up'
