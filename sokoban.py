@@ -1,5 +1,4 @@
 import tkinter
-import time
 from functools import reduce
 
 class Sokoban:
@@ -41,11 +40,12 @@ class Sokoban:
 
     def animate(self):
         while True:
-            self.draw()
-            self.canvas.update()
             if self.checkWinner():
                 print('Winner!')
-            time.sleep(0.05)
+
+            self.draw()
+            self.canvas.update()
+            self.canvas.after(50)
 
     def draw(self):
         self.canvas.delete('all')
@@ -146,6 +146,19 @@ class Sokoban:
     def toggleMouseControl(self, _):
         self.mouseControls = not self.mouseControls
 
+    def mouseMoveControl(self, event):
+        if not self.mouseControls:
+            return
+
+        self.sokoHeading = self.convertMouseCoordsToMove(event.x, event.y)
+        self.doMove()
+
+    # TODO
+    def convertMouseCoordsToMove(self, mouseX, mouseY):
+        pass
+
+        return 'up'
+
     def bindControls(self):
         self.canvas.bind_all('<Up>', self.moveUp)
         self.canvas.bind_all('<Down>', self.moveDown)
@@ -158,6 +171,7 @@ class Sokoban:
         self.canvas.bind_all('d', self.moveRight)
 
         self.canvas.bind_all('<space>', self.toggleMouseControl)
+        self.canvas.bind('<Motion>', self.mouseMoveControl)
 
 
 
