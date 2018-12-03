@@ -172,6 +172,7 @@ class Sokoban:
 
         self.canvas.bind_all('<space>', self.toggleMouseControl)
         self.canvas.bind('<Motion>', self.mouseMoveControl)
+        self.canvas.bind('<ButtonPress>', self.mouseMoveControl)
 
 
 
