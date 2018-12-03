@@ -1,4 +1,5 @@
 import tkinter
+import time
 from functools import reduce
 
 class Sokoban:
@@ -10,13 +11,15 @@ class Sokoban:
 
         self.square = 64
         self.sokoHeading = 'up'
-        self.keyboard = True
 
         self.canvas = tkinter.Canvas(bg='pale green', width=self.square * len(self.map[0]), height=self.square * len(self.map))
         self.canvas.pack()
 
+        self.mouseControls = False
+        self.bindControls()
+
         self.garbage = []
-        self.draw()
+        self.animate()
 
     def loadFile(self, file):
         with open(file) as f:
@@ -32,6 +35,12 @@ class Sokoban:
 
     def __repr__(self):
         return reduce(lambda acc, l: f'{acc}\n{l}', [f'{line}' for line in self.map])
+
+    def animate(self):
+        while True:
+            self.draw()
+            self.canvas.update()
+            time.sleep(0.05)
 
     def draw(self):
         self.canvas.delete('all')
@@ -66,6 +75,7 @@ class Sokoban:
                 crateCanMove, crateFinalX, crateFinalY = self.objectCanMove(newX, newY, direction)
                 if crateCanMove:
                     self.crateMove(newX, newY, crateFinalX, crateFinalY)
+                    # self.playerX, self.playerY = newX, newY
                 return crateCanMove
 
             return False
@@ -108,6 +118,36 @@ class Sokoban:
 
         self.map[fromY][fromX] = '_' if self.map[fromY][fromX] == '$' else '.'
         self.map[newY][newX] = '$' if self.map[newY][newX] == '_' else '!'
+
+    def moveUp(self, event):
+        self.sokoHeading = 'up'
+        self.doMove()
+
+    def moveDown(self, event):
+        self.sokoHeading = 'down'
+        self.doMove()
+
+    def moveLeft(self, event):
+        self.sokoHeading = 'left'
+        self.doMove()
+
+    def moveRight(self, event):
+        self.sokoHeading = 'right'
+        self.doMove()
+
+    def doMove(self):
+        self.playerMove(self.sokoHeading)
+
+    def bindControls(self):
+        self.canvas.bind_all('<Up>', self.moveUp)
+        self.canvas.bind_all('<Down>', self.moveDown)
+        self.canvas.bind_all('<Left>', self.moveLeft)
+        self.canvas.bind_all('<Right>', self.moveRight)
+
+        self.canvas.bind_all('w', self.moveUp)
+        self.canvas.bind_all('s', self.moveDown)
+        self.canvas.bind_all('a', self.moveLeft)
+        self.canvas.bind_all('d', self.moveRight)
 
 
 
