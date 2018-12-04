@@ -17,7 +17,7 @@ class Sokoban:
         self.mouseControls = False
         self.bindControls()
 
-        self.garbage = []
+        self.defineImages()
         self.animate()
 
     def loadFile(self, file):
@@ -47,6 +47,16 @@ class Sokoban:
             self.canvas.update()
             self.canvas.after(50)
 
+    def defineImages(self):
+        self.img_character_up = tkinter.PhotoImage(file='obrazky/character_up.png')
+        self.img_character_down = tkinter.PhotoImage(file='obrazky/character_down.png')
+        self.img_character_left = tkinter.PhotoImage(file='obrazky/character_left.png')
+        self.img_character_right = tkinter.PhotoImage(file='obrazky/character_right.png')
+        self.img_crate = tkinter.PhotoImage(file='obrazky/crate.png')
+        self.img_crate_gold= tkinter.PhotoImage(file='obrazky/crate_gold.png')
+        self.img_target_point = tkinter.PhotoImage(file='obrazky/target_point.png')
+        self.img_wall = tkinter.PhotoImage(file='obrazky/wall.png')
+
     def draw(self):
         self.canvas.delete('all')
 
@@ -54,23 +64,29 @@ class Sokoban:
             for x in range(len(self.map[y])):
                 image = None
                 if y == self.playerY and x == self.playerX:
-                    image = 'character_' + self.sokoHeading
+                    if self.sokoHeading == 'up':
+                        image = self.img_character_up
+                    elif self.sokoHeading == 'down':
+                        image = self.img_character_down
+                    elif self.sokoHeading == 'left':
+                        image = self.img_character_left
+                    elif self.sokoHeading == 'right':
+                        image = self.img_character_right
+                    else:
+                        image = self.img_character_down
                 elif self.map[y][x] == '$':
-                    image = 'crate'
+                    image = self.img_crate
                 elif self.map[y][x] == '.':
-                    image = 'target_point'
+                    image = self.img_target_point
                 elif self.map[y][x] == '#':
-                    image = 'wall'
+                    image = self.img_wall
                 elif self.map[y][x] == '_':
                     pass
                 elif self.map[y][x] == '!':
-                    image = 'crate_gold'
+                    image = self.img_crate_gold
 
                 if image is not None:
-                    img = tkinter.PhotoImage(file=f'obrazky/{image}.png')
-                    self.canvas.create_image(x * self.square, y * self.square, image=img, anchor='nw')
-
-                    self.garbage.append(img)
+                    self.canvas.create_image(x * self.square, y * self.square, image=image, anchor='nw')
 
     def playerMove(self, direction):
         playerCanMove, newX, newY = self.objectCanMove(self.playerX, self.playerY, direction)
@@ -157,11 +173,26 @@ class Sokoban:
         self.sokoHeading = self.convertMouseCoordsToMoveDirection(event.x, event.y)
         self.doMove()
 
-    # TODO
     def convertMouseCoordsToMoveDirection(self, mouseX, mouseY):
-        pass
+        x = mouseX // self.square
+        y = mouseY // self.square
 
-        return 'up'
+        dx = x - self.playerX
+        dy = y - self.playerY
+
+        if dx == 0 == dy:
+            return None
+
+        if abs(dx) >= abs(dy):
+            if dx < 0:
+                return 'left'
+            else:
+                return'right'
+        else:
+            if dy < 0:
+                return 'up'
+            else:
+                return 'down'
 
     def bindControls(self):
         self.canvas.bind_all('<Up>', self.moveUp)
@@ -180,6 +211,6 @@ class Sokoban:
 
 
 
-trash = Sokoban('mapa_easy.txt')
+Sokoban('mapa_easy.txt')
 
 tkinter.mainloop()
