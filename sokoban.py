@@ -1,6 +1,7 @@
 import tkinter
 from functools import reduce
 
+
 class Sokoban:
     def __init__(self, mapFile):
         self.map = []
@@ -11,7 +12,8 @@ class Sokoban:
         self.square = 64
         self.sokoHeading = 'up'
 
-        self.canvas = tkinter.Canvas(bg='pale green', width=self.square * len(self.map[0]), height=self.square * len(self.map))
+        self.canvas = tkinter.Canvas(
+            bg='pale green', width=self.square * len(self.map[0]), height=self.square * len(self.map))
         self.canvas.pack()
 
         self.mouseControls = False
@@ -48,13 +50,18 @@ class Sokoban:
             self.canvas.after(50)
 
     def defineImages(self):
-        self.img_character_up = tkinter.PhotoImage(file='obrazky/character_up.png')
-        self.img_character_down = tkinter.PhotoImage(file='obrazky/character_down.png')
-        self.img_character_left = tkinter.PhotoImage(file='obrazky/character_left.png')
-        self.img_character_right = tkinter.PhotoImage(file='obrazky/character_right.png')
+        self.img_character_up = tkinter.PhotoImage(
+            file='obrazky/character_up.png')
+        self.img_character_down = tkinter.PhotoImage(
+            file='obrazky/character_down.png')
+        self.img_character_left = tkinter.PhotoImage(
+            file='obrazky/character_left.png')
+        self.img_character_right = tkinter.PhotoImage(
+            file='obrazky/character_right.png')
         self.img_crate = tkinter.PhotoImage(file='obrazky/crate.png')
-        self.img_crate_gold= tkinter.PhotoImage(file='obrazky/crate_gold.png')
-        self.img_target_point = tkinter.PhotoImage(file='obrazky/target_point.png')
+        self.img_crate_gold = tkinter.PhotoImage(file='obrazky/crate_gold.png')
+        self.img_target_point = tkinter.PhotoImage(
+            file='obrazky/target_point.png')
         self.img_wall = tkinter.PhotoImage(file='obrazky/wall.png')
 
     def draw(self):
@@ -86,14 +93,17 @@ class Sokoban:
                     image = self.img_crate_gold
 
                 if image is not None:
-                    self.canvas.create_image(x * self.square, y * self.square, image=image, anchor='nw')
+                    self.canvas.create_image(
+                        x * self.square, y * self.square, image=image, anchor='nw')
 
     def playerMove(self, direction):
-        playerCanMove, newX, newY = self.objectCanMove(self.playerX, self.playerY, direction)
+        playerCanMove, newX, newY = self.objectCanMove(
+            self.playerX, self.playerY, direction)
 
         if not playerCanMove:
             if self.canMove(newX, newY) and self.map[newY][newX] in '$!':
-                crateCanMove, crateFinalX, crateFinalY = self.objectCanMove(newX, newY, direction)
+                crateCanMove, crateFinalX, crateFinalY = self.objectCanMove(
+                    newX, newY, direction)
                 if crateCanMove:
                     self.crateMove(newX, newY, crateFinalX, crateFinalY)
                     # self.playerX, self.playerY = newX, newY
@@ -170,7 +180,8 @@ class Sokoban:
         if not self.mouseControls:
             return
 
-        self.sokoHeading = self.convertMouseCoordsToMoveDirection(event.x, event.y)
+        self.sokoHeading = self.convertMouseCoordsToMoveDirection(
+            event.x, event.y)
         self.doMove()
 
     def convertMouseCoordsToMoveDirection(self, mouseX, mouseY):
@@ -208,7 +219,6 @@ class Sokoban:
         self.canvas.bind_all('<space>', self.toggleMouseControl)
         self.canvas.bind('<Motion>', self.mouseMoveControl)
         self.canvas.bind('<ButtonPress>', self.mouseMoveControl)
-
 
 
 Sokoban('mapa_easy.txt')
