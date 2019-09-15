@@ -51,18 +51,18 @@ class Sokoban:
 
     def defineImages(self):
         self.img_character_up = tkinter.PhotoImage(
-            file='obrazky/character_up.png')
+            file='obrazky/character_up.gif')
         self.img_character_down = tkinter.PhotoImage(
-            file='obrazky/character_down.png')
+            file='obrazky/character_down.gif')
         self.img_character_left = tkinter.PhotoImage(
-            file='obrazky/character_left.png')
+            file='obrazky/character_left.gif')
         self.img_character_right = tkinter.PhotoImage(
-            file='obrazky/character_right.png')
-        self.img_crate = tkinter.PhotoImage(file='obrazky/crate.png')
-        self.img_crate_gold = tkinter.PhotoImage(file='obrazky/crate_gold.png')
+            file='obrazky/character_right.gif')
+        self.img_crate = tkinter.PhotoImage(file='obrazky/crate.gif')
+        self.img_crate_gold = tkinter.PhotoImage(file='obrazky/crate_gold.gif')
         self.img_target_point = tkinter.PhotoImage(
-            file='obrazky/target_point.png')
-        self.img_wall = tkinter.PhotoImage(file='obrazky/wall.png')
+            file='obrazky/target_point.gif')
+        self.img_wall = tkinter.PhotoImage(file='obrazky/wall.gif')
 
     def draw(self):
         self.canvas.delete('all')
